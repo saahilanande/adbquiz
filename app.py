@@ -5,11 +5,50 @@ results=[]
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=["POST", "GET"])
 def home():
-    alice()
-    return render_template('home.html')
+    if request.method == "POST":
+            if request.form.get("fbutton"):
+                textforfile = request.form["txt1"]
+                filename = request.form["txt2"]
+                txtsearch = request.form["txt3"]
+                f = open(""+filename+"", "w")
+                f.write(""+textforfile+"")
+                f.close()
+                counter = 0
+                file = open(""+filename+"", "rt")
+                data = file.read()
+                words = data.split()
+                for x in words:
 
+                    if x.find(""+txtsearch+"") != -1:
+                        counter = counter + 1
+                length = len(words)
+                txtdata = str(words)
+
+
+                return render_template('home.html',filen=str(filename),wordcont=str(length),wordtxt=txtdata,counttt=str(counter))
+            else:
+                return render_template('home.html')
+    else:
+        return render_template('home.html')
+
+
+
+
+
+@app.route('/task2', methods=["POST", "GET"])
+def task2():
+    if request.method == "POST":
+            if request.form.get("2button"):
+                
+
+                return render_template('task2.html')
+            else:
+                return render_template('task2.html')
+    else:
+        return render_template('task2.html')
 
 
 
@@ -73,7 +112,7 @@ def alice():
 
 
 def addstopwords():
-    stopfile = open('stopwords.txt', encoding="utf-8")
+    stopfile = open('shortliststopwords', encoding="utf-8")
     read = stopfile.read()
     morestop=[]
     for rem in read.lower().split():
