@@ -1,3 +1,4 @@
+from os import linesep
 import re
 from flask import Flask, render_template, request,redirect,url_for
 
@@ -49,6 +50,34 @@ def task2():
                 return render_template('task2.html')
     else:
         return render_template('task2.html')
+
+@app.route('/task3', methods=["POST", "GET"])
+def task3():
+        
+    if request.method == "POST":
+            stoplist = addstopwords()
+            stopcounter = 0
+            if request.form.get("3button"):
+                textforfile = request.form["txt1"]
+                filename = request.form["txt2"]
+                f = open(""+filename+"", "w")
+                f.write(""+textforfile+"")
+                f.close()
+                file = open(""+filename+"", "rt")
+                lines = file.readlines()
+                for data in lines:
+
+                    for x in stoplist:
+                        data = data.replace(""+x+"","")
+                    list =[]
+                    list.append(data)
+                    txtd = str(list)  
+
+                return render_template('task3.html',filen=str(filename),wordtxt=txtd,wordcont=stopcounter)
+            else:
+                return render_template('task3.html')
+    else:
+        return render_template('task3.html')
 
 
 
@@ -112,14 +141,13 @@ def alice():
 
 
 def addstopwords():
-    stopfile = open('shortliststopwords', encoding="utf-8")
+    stopfile = open('shortliststopwords.txt', encoding="utf-8")
     read = stopfile.read()
     morestop=[]
     for rem in read.lower().split():
         rem = rem.replace("\"","")
         morestop.append(rem)
     return morestop
-
 
 
 
